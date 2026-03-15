@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMU Study Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#0A2540;--accent:#00C2A8;--accent2:#F5A623;--bg:#F0F4F8;--card:#fff;--text:#0A2540;--muted:#5E7A9A;--border:#E2EAF2;--tag-bg:#E6F9F7;--tag-color:#007A6E}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.nav{background:var(--primary);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.2)}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),#00A898);border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:#fff;font-family:'Space Grotesk',sans-serif}
+.nav-title{color:#fff;font-size:18px;font-weight:700}.nav-title span{color:var(--accent)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-btn{background:transparent;border:none;color:rgba(255,255,255,.75);font-family:'Cairo',sans-serif;font-size:14px;padding:7px 16px;border-radius:9px;cursor:pointer;transition:all .2s}
+.nav-btn:hover,.nav-btn.active{background:rgba(255,255,255,.12);color:#fff}
+.admin-btn{background:var(--accent2)!important;color:var(--primary)!important;font-weight:700!important}
+.admin-btn:hover{background:#e09416!important}
+.page{display:none;padding:32px 28px;max-width:1140px;margin:0 auto}
+.page.active{display:block}
+.hero{background:linear-gradient(135deg,var(--primary) 0%,#1a3a5c 100%);border-radius:22px;padding:52px 44px;color:#fff;margin-bottom:36px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-70px;right:-70px;width:280px;height:280px;background:rgba(0,194,168,.13);border-radius:50%}
+.hero::after{content:'';position:absolute;bottom:-90px;left:18%;width:220px;height:220px;background:rgba(245,166,35,.09);border-radius:50%}
+.hero-badge{display:inline-block;background:rgba(0,194,168,.2);border:1px solid rgba(0,194,168,.4);color:var(--accent);font-size:13px;padding:5px 16px;border-radius:22px;margin-bottom:18px;font-weight:600}
+.hero h1{font-size:34px;font-weight:900;margin-bottom:12px;line-height:1.3;position:relative;z-index:1}
+.hero p{font-size:15px;color:rgba(255,255,255,.72);max-width:500px;line-height:1.75;margin-bottom:28px;position:relative;z-index:1}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-stat span:first-child{display:block;font-size:26px;font-weight:900;color:var(--accent)}
+.hero-stat span:last-child{font-size:13px;color:rgba(255,255,255,.62)}
+.section-title{font-size:20px;font-weight:700;color:var(--primary);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.section-title::before{content:'';display:block;width:4px;height:24px;background:var(--accent);border-radius:2px}
+.subjects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:38px}
+.subject-card{background:var(--card);border-radius:18px;border:1.5px solid var(--border);padding:24px 22px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.subject-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 10px 36px rgba(0,194,168,.15)}
+.subject-card::after{content:'';position:absolute;top:0;right:0;width:90px;height:90px;border-radius:0 0 0 90px;opacity:.08}
+.subject-card[data-color=teal]::after{background:#00C2A8}.subject-card[data-color=blue]::after{background:#3B8BD4}
+.subject-card[data-color=orange]::after{background:#F5A623}.subject-card[data-color=purple]::after{background:#7F77DD}
+.subject-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.subject-icon.teal{background:#E1F5EE}.subject-icon.blue{background:#E6F1FB}.subject-icon.orange{background:#FAEEDA}.subject-icon.purple{background:#EEEDFE}
+.subject-card h3{font-size:16px;font-weight:700;margin-bottom:7px}
+.subject-card p{font-size:12px;color:var(--muted);line-height:1.55}
+.subject-meta{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.meta-tag{font-size:11px;padding:4px 11px;border-radius:11px;font-weight:600;background:var(--tag-bg);color:var(--tag-color)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;text-decoration:none;color:var(--text);display:block;transition:all .2s}
+.tool-card:hover{border-color:var(--accent);box-shadow:0 5px 18px rgba(0,194,168,.13);transform:translateY(-2px)}
+.tool-emoji{font-size:28px;display:block;margin-bottom:9px}
+.tool-name{font-size:13px;font-weight:700;margin-bottom:5px}
+.tool-desc{font-size:11px;color:var(--muted)}
+.back-btn{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;padding:9px 18px;border-radius:11px;cursor:pointer;margin-bottom:26px;transition:all .2s}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+.subject-header{background:var(--card);border-radius:18px;padding:30px;border:1px solid var(--border);margin-bottom:26px;display:flex;align-items:center;gap:22px}
+.subject-header-icon{width:64px;height:64px;border-radius:18px;font-size:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.subject-header h2{font-size:24px;font-weight:800;margin-bottom:7px}
+.subject-header p{color:var(--muted);font-size:14px}
+.chapters-list{display:flex;flex-direction:column;gap:12px}
+.chapter-item{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .2s}
+.chapter-item:hover{border-color:rgba(0,194,168,.45)}
+.chapter-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;cursor:pointer;gap:14px;user-select:none}
+.chapter-num{width:36px;height:36px;background:var(--tag-bg);color:var(--tag-color);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;font-family:'Space Grotesk',sans-serif}
+.chapter-label{font-size:15px;font-weight:700;flex:1}
+.chapter-right{display:flex;gap:6px;align-items:center}
+.chapter-arrow{color:var(--muted);font-size:20px;transition:transform .25s;line-height:1}
+.chapter-arrow.open{transform:rotate(90deg);color:var(--accent)}
+.chapter-body{display:none;padding:4px 22px 22px}
+.chapter-body.open{display:block}
+.tabs-header{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab-btn{background:transparent;border:none;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;color:var(--muted);padding:10px 20px;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* CONTENT CARDS */
+.sum-card{background:#F8FCFB;border:1px solid #C8E8E3;border-radius:12px;overflow:hidden;margin-bottom:12px}
+.sum-card-hdr{background:#EDF7F5;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #C8E8E3;flex-wrap:wrap}
+.sum-card-title{font-size:13px;font-weight:700;color:#007A6E;display:flex;align-items:center;gap:7px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sum-card-body{padding:14px 16px;font-size:14px;line-height:1.85;white-space:pre-wrap;color:var(--text)}
+.act-card{background:#FFFBF0;border:1px solid #F0DFA0;border-radius:12px;overflow:hidden;margin-bottom:10px}
+.act-card-hdr{background:#FFFAEB;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #F0DFA0;flex-wrap:wrap}
+.act-card-title{font-size:13px;font-weight:700;color:#854F0B;display:flex;align-items:center;gap:6px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.act-card-body{padding:12px 14px;font-size:13px;line-height:1.7;white-space:pre-wrap;color:var(--text)}
+
+/* HTML PREVIEW — fixed height, scrollable, NOT full page */
+.html-preview-box{border-top:1px solid #C8E8E3;position:relative}
+.html-preview-box iframe{width:100%;border:none;display:block;height:340px;max-height:340px}
+.html-preview-box .preview-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#F0FDF9;border-top:1px solid #C8E8E3;font-size:12px;color:var(--muted)}
+.html-act-box{border-top:1px solid #F0DFA0;position:relative}
+.html-act-box iframe{width:100%;border:none;display:block;height:340px;max-height:340px}
+.html-act-box .preview-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#FFFAEB;border-top:1px solid #F0DFA0;font-size:12px;color:var(--muted)}
+
+/* FILE ATTACHMENT */
+.file-attach{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.file-icon-big{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.file-icon-big.pdf{background:#FEE2E2}.file-icon-big.word{background:#DBEAFE}.file-icon-big.ppt{background:#FFEDD5}.file-icon-big.img{background:#F3E8FF}.file-icon-big.html{background:#E0F2FE}.file-icon-big.other{background:#F1F5F9}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-size{font-size:12px;color:var(--muted)}
+.file-actions{display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap}
+.img-preview{padding:12px 16px 16px}
+.img-preview img{width:100%;border-radius:8px;display:block;cursor:pointer;max-height:400px;object-fit:contain}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;padding:12px 16px 16px}
+.img-grid img{width:100%;border-radius:8px;cursor:pointer;aspect-ratio:4/3;object-fit:cover;transition:all .2s}
+.img-grid img:hover{transform:scale(1.02);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.summary-empty{background:#F8F9FA;border-radius:10px;border:1.5px dashed #D0D8E4;padding:20px;font-size:13px;color:var(--muted);text-align:center;line-height:1.7}
+.ch-badge{font-size:10px;padding:3px 9px;border-radius:7px;font-weight:700}
+.ch-badge.has-sum{background:#E1F5EE;color:#007A6E}
+.ch-badge.has-act{background:#FAEEDA;color:#854F0B}
+
+/* BUTTONS */
+.abtn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 13px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+.abtn:hover{background:#00A898}
+.abtn.amber{background:var(--accent2);color:var(--primary)}.abtn.amber:hover{background:#e09416}
+.abtn.del{background:transparent;color:#dc2626;border:1.5px solid #fca5a5}.abtn.del:hover{background:#fee2e2}
+
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:90vh;border-radius:12px;object-fit:contain}
+.lb-close{position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{background:rgba(255,255,255,.3)}
+
+/* ADMIN */
+.admin-wrap{max-width:840px;margin:0 auto}
+.admin-card{background:var(--card);border-radius:18px;border:1px solid var(--border);padding:30px;margin-bottom:22px}
+.admin-card h2{font-size:20px;font-weight:800;margin-bottom:5px;color:var(--primary);display:flex;align-items:center;gap:9px}
+.admin-card .sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:13px;font-weight:700;color:var(--muted);display:block;margin-bottom:7px}
+.form-select,.form-input{width:100%;background:#F8FAFC;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'Cairo',sans-serif;font-size:14px;color:var(--text);direction:rtl;outline:none;transition:border-color .2s}
+.form-select:focus,.form-input:focus{border-color:var(--accent)}
+.form-textarea{width:100%;background:#F8FAFC;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'Cairo',sans-serif;font-size:14px;color:var(--text);direction:rtl;outline:none;transition:border-color .2s;min-height:100px;resize:vertical}
+.form-textarea:focus{border-color:var(--accent)}
+.type-tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.type-tab{padding:8px 14px;border:1.5px solid var(--border);border-radius:10px;background:#F8FAFC;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.type-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .25s;background:#F8FAFC;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:#F0FDF9}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone-icon{font-size:32px;margin-bottom:8px}
+.upload-zone-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.upload-zone-hint{font-size:12px;color:var(--muted)}
+.upload-files-list{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.upload-file-item{background:#E1F5EE;border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;font-size:13px;color:#007A6E;font-weight:600}
+.upload-file-remove{background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1;padding:0 2px;margin-right:auto}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.submit-btn{background:var(--accent);color:#fff;border:none;border-radius:11px;padding:13px 28px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;width:100%}
+.submit-btn:hover{background:#00A898;transform:translateY(-1px)}
+.success-toast{background:#E1F5EE;border:1px solid #00C2A8;color:#007A6E;border-radius:10px;padding:13px 18px;font-size:14px;margin-top:14px;display:none;font-weight:600;text-align:center}
+.error-toast{background:#FEE2E2;border:1px solid #FCA5A5;color:#991B1B;border-radius:10px;padding:13px 18px;font-size:14px;margin-top:14px;display:none;font-weight:600;text-align:center}
+@media(max-width:700px){
+  .nav{padding:0 16px}.page{padding:18px 14px}.hero{padding:30px 22px}.hero h1{font-size:24px}
+  .form-row{grid-template-columns:1fr}.nav-btn span{display:none}
+  .html-preview-box iframe,.html-act-box iframe{height:260px}
+}
+</style>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDMWW9KFXjCVf54LFW-gPIZgbrG6rZ-BHA",
+  authDomain: "tmu-study.firebaseapp.com",
+  projectId: "tmu-study",
+  storageBucket: "tmu-study.firebasestorage.app",
+  messagingSenderId: "1026492423725",
+  appId: "1:1026492423725:web:f59b247413da1cc415a2a4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Firestore helpers ───────────────────────────────────────
+// We store ALL data in one Firestore document: "platform/data"
+// Files (images, pdf, etc.) are stored as base64 strings inside the doc.
+
+window._fbSave = async function(data) {
+  try {
+    // Firestore has 1MB doc limit — we split by subject+chapter
+    for (const subKey of Object.keys(data)) {
+      for (let ci = 0; ci < data[subKey].length; ci++) {
+        const ch = data[subKey][ci];
+        const ref = doc(db, "platform", subKey + "_ch" + ci);
+        await setDoc(ref, { summaries: ch.summaries, activities: ch.activities });
+      }
+    }
+    return true;
+  } catch(e) {
+    console.error("Firebase save error:", e);
+    return false;
+  }
+};
+
+window._fbLoad = async function() {
+  try {
+    const subjectKeys = ["pm","cc","rm","mad"];
+    const result = {};
+    for (const subKey of subjectKeys) {
+      result[subKey] = [];
+      for (let ci = 0; ci < 12; ci++) {
+        const ref  = doc(db, "platform", subKey + "_ch" + ci);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          result[subKey].push(snap.data());
+        } else {
+          result[subKey].push({ summaries: [], activities: [] });
+        }
+      }
+    }
+    return result;
+  } catch(e) {
+    console.error("Firebase load error:", e);
+    return null;
+  }
+};
+
+// ── Real-time listener ──────────────────────────────────────
+// Listen to one sentinel doc that we update on every save
+const sentinelRef = doc(db, "platform", "_updated");
+onSnapshot(sentinelRef, async (snap) => {
+  if (!snap.exists()) return;
+  // reload data when any change comes from another device
+  if (window._fbOnChange) window._fbOnChange();
+});
+
+window._fbTouch = async function() {
+  await setDoc(sentinelRef, { t: Date.now() });
+};
+
+window._fbReady = true;
+window.dispatchEvent(new Event("fb-ready"));
+</script>
+</head>
+<body>
+
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<nav class="nav">
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="logo-icon">TU</div>
+    <div class="nav-title">TMU <span>Study</span></div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="btn-home" onclick="showPage('home');setActive('btn-home')">🏠 <span>الرئيسية</span></button>
+    <button class="nav-btn" id="btn-tools" onclick="showPage('tools');setActive('btn-tools')">🛠️ <span>الأدوات</span></button>
+    <button class="nav-btn admin-btn" id="btn-admin" onclick="showPage('admin');setActive('btn-admin')">+ إضافة محتوى</button>
+    <span id="fb-status" title="حالة الاتصال بـ Firebase" style="font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px"><span id="fb-dot" style="width:7px;height:7px;border-radius:50%;background:#6b7280;display:inline-block"></span><span id="fb-txt">...</span></span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span id="save-indicator" style="width:8px;height:8px;border-radius:50%;background:#4ade80;opacity:0;transition:opacity .4s;flex-shrink:0"></span>
+      <button class="nav-btn" id="btn-save" onclick="saveSession()" style="background:#16a34a;color:#fff;font-weight:700">💾 حفظ نسخة</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">🎓 جامعة التقنية والعلوم التطبيقية</div>
+    <h1>منصتك الأكاديمية الذكية</h1>
+    <p>ملخصات، شابترز، وأنشطة لكل مواد الفصل الدراسي — كل شيء في مكان واحد</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span>4</span><span>مواد دراسية</span></div>
+      <div class="hero-stat"><span>12</span><span>شابتر لكل مادة</span></div>
+      <div class="hero-stat"><span>∞</span><span>ملخصات لكل شابتر</span></div>
+    </div>
+  </div>
+  <div class="section-title">المواد الدراسية</div>
+  <div class="subjects-grid">
+    <div class="subject-card" data-color="teal" onclick="showSubject('pm')"><div class="subject-icon teal">📊</div><h3>Project Management</h3><p>إدارة المشاريع، التخطيط، الجدولة وإدارة المخاطر</p><div class="subject-meta"><span class="meta-tag">12 شابتر</span></div></div>
+    <div class="subject-card" data-color="blue" onclick="showSubject('cc')"><div class="subject-icon blue">☁️</div><h3>Cloud Computing</h3><p>الحوسبة السحابية، الخدمات، الأمان والبنية التحتية</p><div class="subject-meta"><span class="meta-tag">12 شابتر</span></div></div>
+    <div class="subject-card" data-color="orange" onclick="showSubject('rm')"><div class="subject-icon orange">🔬</div><h3>Research Methodology</h3><p>مناهج البحث العلمي، جمع البيانات والتحليل</p><div class="subject-meta"><span class="meta-tag">12 شابتر</span></div></div>
+    <div class="subject-card" data-color="purple" onclick="showSubject('mad')"><div class="subject-icon purple">📱</div><h3>Mobile App Dev</h3><p>تطوير تطبيقات الجوال، Android وiOS</p><div class="subject-meta"><span class="meta-tag">12 شابتر</span></div></div>
+  </div>
+  <div class="section-title">أدوات مذاكرة سريعة</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="https://quizlet.com" target="_blank"><span class="tool-emoji">🃏</span><div class="tool-name">Quizlet</div><div class="tool-desc">بطاقات تعليمية</div></a>
+    <a class="tool-card" href="https://www.notion.so" target="_blank"><span class="tool-emoji">📝</span><div class="tool-name">Notion</div><div class="tool-desc">تنظيم الملاحظات</div></a>
+    <a class="tool-card" href="https://chat.openai.com" target="_blank"><span class="tool-emoji">🤖</span><div class="tool-name">ChatGPT</div><div class="tool-desc">مساعد AI</div></a>
+    <a class="tool-card" href="https://claude.ai" target="_blank"><span class="tool-emoji">✨</span><div class="tool-name">Claude AI</div><div class="tool-desc">شرح ذكي</div></a>
+  </div>
+</div>
+
+<!-- SUBJECT -->
+<div class="page" id="page-subject">
+  <button class="back-btn" onclick="showPage('home')">← رجوع للرئيسية</button>
+  <div class="subject-header">
+    <div class="subject-header-icon" id="detail-icon"></div>
+    <div><h2 id="detail-title"></h2><p id="detail-desc"></p></div>
+  </div>
+  <div class="section-title">الشابترز والملخصات</div>
+  <div class="chapters-list" id="chapters-container"></div>
+</div>
+
+<!-- TOOLS -->
+<div class="page" id="page-tools">
+  <div class="section-title">أدوات وموارد المذاكرة</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="https://quizlet.com" target="_blank"><span class="tool-emoji">🃏</span><div class="tool-name">Quizlet</div><div class="tool-desc">بطاقات تعليمية</div></a>
+    <a class="tool-card" href="https://www.notion.so" target="_blank"><span class="tool-emoji">📝</span><div class="tool-name">Notion</div><div class="tool-desc">تنظيم الملاحظات</div></a>
+    <a class="tool-card" href="https://obsidian.md" target="_blank"><span class="tool-emoji">💎</span><div class="tool-name">Obsidian</div><div class="tool-desc">خرائط ذهنية</div></a>
+    <a class="tool-card" href="https://chat.openai.com" target="_blank"><span class="tool-emoji">🤖</span><div class="tool-name">ChatGPT</div><div class="tool-desc">مساعد AI</div></a>
+    <a class="tool-card" href="https://claude.ai" target="_blank"><span class="tool-emoji">✨</span><div class="tool-name">Claude AI</div><div class="tool-desc">شرح متقدم</div></a>
+    <a class="tool-card" href="https://www.deepl.com" target="_blank"><span class="tool-emoji">🌐</span><div class="tool-name">DeepL</div><div class="tool-desc">ترجمة دقيقة</div></a>
+    <a class="tool-card" href="https://www.wolframalpha.com" target="_blank"><span class="tool-emoji">🔢</span><div class="tool-name">Wolfram Alpha</div><div class="tool-desc">حسابات علمية</div></a>
+    <a class="tool-card" href="https://www.youtube.com" target="_blank"><span class="tool-emoji">▶️</span><div class="tool-name">YouTube</div><div class="tool-desc">شرح بالفيديو</div></a>
+    <a class="tool-card" href="https://drive.google.com" target="_blank"><span class="tool-emoji">📁</span><div class="tool-name">Google Drive</div><div class="tool-desc">تخزين الملفات</div></a>
+    <a class="tool-card" href="https://www.canva.com" target="_blank"><span class="tool-emoji">🎨</span><div class="tool-name">Canva</div><div class="tool-desc">مخططات بصرية</div></a>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+
+    <!-- SUMMARY -->
+    <div class="admin-card">
+      <h2>📋 إضافة ملخص</h2>
+      <p class="sub">أضف عدد غير محدود من الملخصات لكل شابتر — نص، صفحة HTML، صور، PDF، Word، أو PowerPoint</p>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">المادة</label>
+          <select class="form-select" id="sum-subject">
+            <option value="pm">📊 Project Management</option>
+            <option value="cc">☁️ Cloud Computing</option>
+            <option value="rm">🔬 Research Methodology</option>
+            <option value="mad">📱 Mobile App Dev</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">الشابتر</label>
+          <select class="form-select" id="sum-chapter">
+            <option value="0">Chapter 1</option><option value="1">Chapter 2</option><option value="2">Chapter 3</option><option value="3">Chapter 4</option><option value="4">Chapter 5</option><option value="5">Chapter 6</option><option value="6">Chapter 7</option><option value="7">Chapter 8</option><option value="8">Chapter 9</option><option value="9">Chapter 10</option><option value="10">Chapter 11</option><option value="11">Chapter 12</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم الملخص</label>
+        <input class="form-input" id="sum-name" type="text" placeholder="مثال: ملخص الكتاب، مراجعة الامتحان...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع الملخص</label>
+        <div class="type-tabs" id="sum-type-tabs">
+          <button class="type-tab active" onclick="switchType('sum','text',this)">📝 نص</button>
+          <button class="type-tab" onclick="switchType('sum','html',this)">🎨 HTML</button>
+          <button class="type-tab" onclick="switchType('sum','images',this)">🖼️ صور</button>
+          <button class="type-tab" onclick="switchType('sum','pdf',this)">📄 PDF</button>
+          <button class="type-tab" onclick="switchType('sum','word',this)">📘 Word</button>
+          <button class="type-tab" onclick="switchType('sum','ppt',this)">📊 PowerPoint</button>
+        </div>
+        <div id="sum-input-text"><textarea class="form-textarea" id="sum-text" placeholder="اكتب الملخص هنا..."></textarea></div>
+        <div id="sum-input-html" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'sum-html-input','sumHtml')">
+            <input type="file" id="sum-html-input" accept=".html,.htm" onchange="fileSel(this,'sumHtml')">
+            <div class="upload-zone-icon">🎨</div>
+            <div class="upload-zone-title">اضغط لرفع ملف HTML</div>
+            <div class="upload-zone-hint">يدعم .html و .htm — سيظهر بتصميمه الكامل مع زر تحميل</div>
+          </div>
+          <div class="upload-files-list" id="sumHtml-list"></div>
+        </div>
+        <div id="sum-input-images" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'sum-images-input','sumImages')">
+            <input type="file" id="sum-images-input" accept="image/*" multiple onchange="fileSel(this,'sumImages')">
+            <div class="upload-zone-icon">🖼️</div>
+            <div class="upload-zone-title">اضغط لرفع الصور</div>
+            <div class="upload-zone-hint">JPG، PNG، GIF — يمكن رفع أكثر من صورة</div>
+          </div>
+          <div class="upload-files-list" id="sumImages-list"></div>
+        </div>
+        <div id="sum-input-pdf" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'sum-pdf-input','sumPdf')">
+            <input type="file" id="sum-pdf-input" accept=".pdf" onchange="fileSel(this,'sumPdf')">
+            <div class="upload-zone-icon">📄</div><div class="upload-zone-title">اضغط لرفع PDF</div><div class="upload-zone-hint">ملف PDF واحد</div>
+          </div>
+          <div class="upload-files-list" id="sumPdf-list"></div>
+        </div>
+        <div id="sum-input-word" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'sum-word-input','sumWord')">
+            <input type="file" id="sum-word-input" accept=".doc,.docx" onchange="fileSel(this,'sumWord')">
+            <div class="upload-zone-icon">📘</div><div class="upload-zone-title">اضغط لرفع Word</div><div class="upload-zone-hint">.doc و .docx</div>
+          </div>
+          <div class="upload-files-list" id="sumWord-list"></div>
+        </div>
+        <div id="sum-input-ppt" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'sum-ppt-input','sumPpt')">
+            <input type="file" id="sum-ppt-input" accept=".ppt,.pptx" onchange="fileSel(this,'sumPpt')">
+            <div class="upload-zone-icon">📊</div><div class="upload-zone-title">اضغط لرفع PowerPoint</div><div class="upload-zone-hint">.ppt و .pptx</div>
+          </div>
+          <div class="upload-files-list" id="sumPpt-list"></div>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="addItem('sum')">➕ إضافة الملخص</button>
+      <div class="success-toast" id="st-sum">✅ تمت الإضافة!</div>
+      <div class="error-toast" id="et-sum">⚠️ أدخل الاسم والمحتوى</div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div class="admin-card">
+      <h2>✏️ إضافة نشاط / واجب</h2>
+      <p class="sub">أضف الأنشطة والواجبات — نص، صفحة HTML، صور، PDF، Word، أو PowerPoint</p>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">المادة</label>
+          <select class="form-select" id="act-subject">
+            <option value="pm">📊 Project Management</option>
+            <option value="cc">☁️ Cloud Computing</option>
+            <option value="rm">🔬 Research Methodology</option>
+            <option value="mad">📱 Mobile App Dev</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">الشابتر</label>
+          <select class="form-select" id="act-chapter">
+            <option value="0">Chapter 1</option><option value="1">Chapter 2</option><option value="2">Chapter 3</option><option value="3">Chapter 4</option><option value="4">Chapter 5</option><option value="5">Chapter 6</option><option value="6">Chapter 7</option><option value="7">Chapter 8</option><option value="8">Chapter 9</option><option value="9">Chapter 10</option><option value="10">Chapter 11</option><option value="11">Chapter 12</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم النشاط</label>
+        <input class="form-input" id="act-name" type="text" placeholder="مثال: واجب الأسبوع الأول، نشاط صفي...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع النشاط</label>
+        <div class="type-tabs" id="act-type-tabs">
+          <button class="type-tab active" onclick="switchType('act','text',this)">📝 نص</button>
+          <button class="type-tab" onclick="switchType('act','html',this)">🎨 HTML</button>
+          <button class="type-tab" onclick="switchType('act','images',this)">🖼️ صور</button>
+          <button class="type-tab" onclick="switchType('act','pdf',this)">📄 PDF</button>
+          <button class="type-tab" onclick="switchType('act','word',this)">📘 Word</button>
+          <button class="type-tab" onclick="switchType('act','ppt',this)">📊 PowerPoint</button>
+        </div>
+        <div id="act-input-text"><textarea class="form-textarea" id="act-text" placeholder="اكتب تفاصيل النشاط هنا..."></textarea></div>
+        <div id="act-input-html" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'act-html-input','actHtml')">
+            <input type="file" id="act-html-input" accept=".html,.htm" onchange="fileSel(this,'actHtml')">
+            <div class="upload-zone-icon">🎨</div>
+            <div class="upload-zone-title">اضغط لرفع ملف HTML</div>
+            <div class="upload-zone-hint">يدعم .html و .htm</div>
+          </div>
+          <div class="upload-files-list" id="actHtml-list"></div>
+        </div>
+        <div id="act-input-images" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'act-images-input','actImages')">
+            <input type="file" id="act-images-input" accept="image/*" multiple onchange="fileSel(this,'actImages')">
+            <div class="upload-zone-icon">🖼️</div><div class="upload-zone-title">اضغط لرفع الصور</div><div class="upload-zone-hint">يمكن رفع أكثر من صورة</div>
+          </div>
+          <div class="upload-files-list" id="actImages-list"></div>
+        </div>
+        <div id="act-input-pdf" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'act-pdf-input','actPdf')">
+            <input type="file" id="act-pdf-input" accept=".pdf" onchange="fileSel(this,'actPdf')">
+            <div class="upload-zone-icon">📄</div><div class="upload-zone-title">اضغط لرفع PDF</div><div class="upload-zone-hint">ملف PDF واحد</div>
+          </div>
+          <div class="upload-files-list" id="actPdf-list"></div>
+        </div>
+        <div id="act-input-word" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'act-word-input','actWord')">
+            <input type="file" id="act-word-input" accept=".doc,.docx" onchange="fileSel(this,'actWord')">
+            <div class="upload-zone-icon">📘</div><div class="upload-zone-title">اضغط لرفع Word</div><div class="upload-zone-hint">.doc و .docx</div>
+          </div>
+          <div class="upload-files-list" id="actWord-list"></div>
+        </div>
+        <div id="act-input-ppt" style="display:none">
+          <div class="upload-zone" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddr(event,'act-ppt-input','actPpt')">
+            <input type="file" id="act-ppt-input" accept=".ppt,.pptx" onchange="fileSel(this,'actPpt')">
+            <div class="upload-zone-icon">📊</div><div class="upload-zone-title">اضغط لرفع PowerPoint</div><div class="upload-zone-hint">.ppt و .pptx</div>
+          </div>
+          <div class="upload-files-list" id="actPpt-list"></div>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="addItem('act')">➕ إضافة النشاط</button>
+      <div class="success-toast" id="st-act">✅ تمت الإضافة!</div>
+      <div class="error-toast" id="et-act">⚠️ أدخل الاسم والمحتوى</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────
+function makeChapters(){return Array.from({length:12},(_,i)=>({num:i+1,summaries:[],activities:[]}))}
+const subjects={
+  pm: {title:'Project Management',  icon:'📊',cls:'teal',  desc:'إدارة المشاريع، التخطيط، الجدولة وإدارة المخاطر',   chapters:makeChapters()},
+  cc: {title:'Cloud Computing',     icon:'☁️',cls:'blue',  desc:'الحوسبة السحابية، الخدمات، الأمان والبنية التحتية', chapters:makeChapters()},
+  rm: {title:'Research Methodology',icon:'🔬',cls:'orange',desc:'مناهج البحث العلمي، جمع البيانات والتحليل',          chapters:makeChapters()},
+  mad:{title:'Mobile App Dev',      icon:'📱',cls:'purple',desc:'تطوير تطبيقات الجوال، Android وiOS',                chapters:makeChapters()}
+};
+let currentKey=null;
+const curType={sum:'text', act:'text'};
+
+// pending file buffers
+const P={sumHtml:[],sumImages:[],sumPdf:[],sumWord:[],sumPpt:[],actHtml:[],actImages:[],actPdf:[],actWord:[],actPpt:[]};
+
+// ─── NAV ──────────────────────────────────────────────────────
+function showPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');window.scrollTo(0,0)}
+function setActive(id){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+// ─── TYPE SWITCH ──────────────────────────────────────────────
+const allTypes=['text','html','images','pdf','word','ppt'];
+function switchType(prefix,t,el){
+  curType[prefix]=t;
+  allTypes.forEach(x=>{const d=document.getElementById(prefix+'-input-'+x);if(d)d.style.display='none'});
+  document.getElementById(prefix+'-input-'+t).style.display='block';
+  document.getElementById(prefix+'-type-tabs').querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── FILE HANDLING ────────────────────────────────────────────
+function fileSel(inp,key){Array.from(inp.files).forEach(f=>addPending(f,key));inp.value=''}
+function dov(e){e.preventDefault();e.currentTarget.classList.add('drag')}
+function dlv(e){e.currentTarget.classList.remove('drag')}
+function ddr(e,inputId,key){e.preventDefault();e.currentTarget.classList.remove('drag');Array.from(e.dataTransfer.files).forEach(f=>addPending(f,key))}
+function addPending(file,key){P[key].push({file,url:URL.createObjectURL(file),name:file.name,size:file.size,type:file.type});renderPList(key)}
+function removePending(key,i){URL.revokeObjectURL(P[key][i].url);P[key].splice(i,1);renderPList(key)}
+function renderPList(key){
+  const el=document.getElementById(key+'-list');if(!el)return;
+  el.innerHTML=P[key].map((f,i)=>`<div class="upload-file-item">${fEmoji(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</span><span style="color:var(--muted);font-size:11px;flex-shrink:0">${fmtSz(f.size)}</span><button class="upload-file-remove" onclick="removePending('${key}',${i})">✕</button></div>`).join('');
+}
+
+// ─── ADD ITEM ─────────────────────────────────────────────────
+function addItem(prefix){
+  const isSum=prefix==='sum';
+  const key=document.getElementById(prefix+'-subject').value;
+  const ci=parseInt(document.getElementById(prefix+'-chapter').value);
+  const name=document.getElementById(prefix+'-name').value.trim();
+  const t=curType[prefix];
+  const arr=isSum?'summaries':'activities';
+  if(!name){showToast('et-'+prefix);return}
+
+  if(t==='text'){
+    const c=document.getElementById(prefix+'-text').value.trim();
+    if(!c){showToast('et-'+prefix);return}
+    push(key,ci,arr,{id:uid(),name,type:'text',content:c});
+    document.getElementById(prefix+'-text').value='';
+    finishAdd(prefix,key);
+  } else if(t==='html'){
+    const pKey=prefix==='sum'?'sumHtml':'actHtml';
+    if(!P[pKey].length){showToast('et-'+prefix);return}
+    const f=P[pKey][0].file;
+    const r=new FileReader();
+    r.onload=e=>{
+      push(key,ci,arr,{id:uid(),name,type:'html',content:e.target.result,fileName:f.name,fileSize:f.size});
+      P[pKey]=[];renderPList(pKey);
+      finishAdd(prefix,key);
+    };
+    r.readAsText(f,'UTF-8');
+    return;
+  } else {
+    const suffix=t==='images'?'Images':t==='pdf'?'Pdf':t==='word'?'Word':'Ppt';
+    const storeKey=prefix+suffix;
+    if(!P[storeKey]||!P[storeKey].length){showToast('et-'+prefix);return}
+    push(key,ci,arr,{id:uid(),name,type:t,files:[...P[storeKey]]});
+    P[storeKey]=[];renderPList(storeKey);
+    finishAdd(prefix,key);
+  }
+}
+
+function finishAdd(prefix,key){
+  document.getElementById(prefix+'-name').value='';
+  if(currentKey===key) renderChapters(key);
+  showToast('st-'+prefix);
+  autoSave();
+}
+
+// ─── RENDER ───────────────────────────────────────────────────
+function showSubject(key){
+  currentKey=key;const s=subjects[key];
+  const el=document.getElementById('detail-icon');
+  el.textContent=s.icon;el.className='subject-header-icon '+s.cls;
+  document.getElementById('detail-title').textContent=s.title;
+  document.getElementById('detail-desc').textContent=s.desc;
+  renderChapters(key);showPage('subject');
+}
+
+function renderChapters(key){
+  const s=subjects[key],c=document.getElementById('chapters-container');
+  c.innerHTML='';
+  s.chapters.forEach((ch,i)=>{
+    const div=document.createElement('div');div.className='chapter-item';
+    let badges='';
+    if(ch.summaries.length) badges+=`<span class="ch-badge has-sum">📋 ${ch.summaries.length}</span>`;
+    if(ch.activities.length) badges+=`<span class="ch-badge has-act">✏️ ${ch.activities.length}</span>`;
+    div.innerHTML=`
+      <div class="chapter-header" onclick="toggleCh(${i})">
+        <div class="chapter-num">${ch.num}</div>
+        <div class="chapter-label">Chapter ${ch.num}</div>
+        <div class="chapter-right">${badges}<span class="chapter-arrow" id="arr-${i}">›</span></div>
+      </div>
+      <div class="chapter-body" id="body-${i}">
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="swTab(event,'sp-${i}','body-${i}')">📋 الملخصات${ch.summaries.length?' ('+ch.summaries.length+')':''}</button>
+          <button class="tab-btn" onclick="swTab(event,'ap-${i}','body-${i}')">✏️ الأنشطة${ch.activities.length?' ('+ch.activities.length+')':''}</button>
+        </div>
+        <div class="tab-panel active" id="sp-${i}">${buildSums(key,i,ch)}</div>
+        <div class="tab-panel" id="ap-${i}">${buildActs(key,i,ch)}</div>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+function buildSums(key,ci,ch){
+  if(!ch.summaries.length) return `<div class="summary-empty">📌 لا يوجد ملخص بعد<br><small>اضغط "+ إضافة محتوى" لإضافة ملخص</small></div>`;
+  return ch.summaries.map((sm,si)=>buildCard(key,ci,si,sm,'sum')).join('');
+}
+function buildActs(key,ci,ch){
+  if(!ch.activities.length) return `<div class="summary-empty">لا توجد أنشطة بعد</div>`;
+  return ch.activities.map((act,ai)=>buildCard(key,ci,ai,act,'act')).join('');
+}
+
+function buildCard(key,ci,idx,item,kind){
+  const isSum=kind==='sum';
+  // unique stable ID using item.id
+  const delFn=`delItem('${key}',${ci},${idx},'${isSum?'summaries':'activities'}')`;
+  const hdrCls=isSum?'sum-card-hdr':'act-card-hdr';
+  const titleCls=isSum?'sum-card-title':'act-card-title';
+  const cardCls=isSum?'sum-card':'act-card';
+  const previewBoxCls=isSum?'html-preview-box':'html-act-box';
+
+  let body='';
+  if(item.type==='text'){
+    body=`<div class="${isSum?'sum-card-body':'act-card-body'}">${esc(item.content)}</div>`;
+  } else if(item.type==='html'){
+    // Use blob URL so every iframe gets its own unique URL — fixes multi-HTML display
+    const blobUrl=URL.createObjectURL(new Blob([item.content],{type:'text/html;charset=utf-8'}));
+    body=`<div class="${previewBoxCls}">
+      <iframe src="${blobUrl}" sandbox="allow-same-origin allow-scripts" style="width:100%;border:none;display:block;height:340px"></iframe>
+      <div class="preview-bar">
+        <span>📄 ${esc(item.fileName||item.name)}</span>
+        <div style="display:flex;gap:7px">
+          <button class="abtn" onclick="dlHTML('${key}',${ci},${idx},'${isSum?'summaries':'activities'}')">⬇️ تحميل</button>
+          <button class="abtn amber" onclick="openHTML('${key}',${ci},${idx},'${isSum?'summaries':'activities'}')">🔍 فتح كاملاً</button>
+        </div>
+      </div>
+    </div>`;
+  } else if(item.type==='images'){
+    const imgs=item.files.map(f=>`<img src="${f.url}" alt="${esc(f.name)}" onclick="openLB('${f.url}')" loading="lazy">`).join('');
+    body=`<div class="${item.files.length===1?'img-preview':'img-grid'}">${imgs}</div>`;
+  } else {
+    body=item.files.map(f=>`
+      <div class="file-attach">
+        <div class="file-icon-big ${fIconCls(f.name)}">${fEmoji(f.name)}</div>
+        <div class="file-info"><div class="file-name">${esc(f.name)}</div><div class="file-size">${fmtSz(f.size)}</div></div>
+        <div class="file-actions">
+          <a class="abtn" href="${f.url}" download="${esc(f.name)}">⬇️ تحميل</a>
+          <a class="abtn amber" href="${f.url}" target="_blank">🔍 فتح</a>
+        </div>
+      </div>`).join('');
+  }
+
+  const icon={'text':isSum?'📄':'📝','html':'🎨','images':'🖼️','pdf':'📄','word':'📘','ppt':'📊'}[item.type]||'📎';
+  return `<div class="${cardCls}">
+    <div class="${hdrCls}">
+      <div class="${titleCls}">${icon} ${esc(item.name)}</div>
+      <button class="abtn del" onclick="${delFn}">🗑️ حذف</button>
+    </div>
+    ${body}
+  </div>`;
+}
+
+// ─── PUSH ────────────────────────────────────────────────────
+function push(key,ci,arr,entry){
+  subjects[key].chapters[ci][arr].push(entry);
+}
+
+// ─── CHAPTER TOGGLE ───────────────────────────────────────────
+function toggleCh(i){
+  const body=document.getElementById('body-'+i),arr=document.getElementById('arr-'+i);
+  body.classList.toggle('open');arr.classList.toggle('open');
+
+}
+
+function swTab(e,targetId,bodyId){
+  const body=document.getElementById(bodyId);
+  body.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  body.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  e.target.classList.add('active');document.getElementById(targetId).classList.add('active');
+
+}
+
+// ─── HTML ACTIONS ─────────────────────────────────────────────
+function openHTML(key,ci,idx,arr){
+  const item=subjects[key].chapters[ci][arr][idx];
+  window.open(URL.createObjectURL(new Blob([item.content],{type:'text/html'})),'_blank');
+}
+function dlHTML(key,ci,idx,arr){
+  const item=subjects[key].chapters[ci][arr][idx];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([item.content],{type:'text/html'}));
+  a.download=item.fileName||item.name+'.html';
+  a.click();
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function delItem(key,ci,idx,arr){
+  if(!confirm('حذف هذا العنصر؟')) return;
+  subjects[key].chapters[ci][arr].splice(idx,1);
+  if(currentKey===key) renderChapters(key);
+  autoSave();
+}
+function openLB(url){document.getElementById('lb-img').src=url;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden'}
+function closeLB(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+function showToast(id){const el=document.getElementById(id);el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
+function uid(){return Date.now()+Math.random().toString(36).slice(2)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmtSz(b){if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB'}
+function fEmoji(n){const e=n.split('.').pop().toLowerCase();if(['jpg','jpeg','png','gif','webp','svg'].includes(e))return '🖼️';if(e==='pdf')return'📄';if(['doc','docx'].includes(e))return'📘';if(['ppt','pptx'].includes(e))return'📊';if(['html','htm'].includes(e))return'🎨';return'📎'}
+function fIconCls(n){const e=n.split('.').pop().toLowerCase();if(['jpg','jpeg','png','gif','webp'].includes(e))return'img';if(e==='pdf')return'pdf';if(['doc','docx'].includes(e))return'word';if(['ppt','pptx'].includes(e))return'ppt';if(['html','htm'].includes(e))return'html';return'other'}
+
+// ─── SAVE SESSION ─────────────────────────────────────────────
+// Converts all file blobs to base64 so they survive saving
+async function blobToB64(url){
+  const res=await fetch(url);
+  const buf=await res.arrayBuffer();
+  const bytes=new Uint8Array(buf);
+  let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+
+async function serializeItem(item){
+  const s={...item};
+  if(item.type==='images'||item.type==='pdf'||item.type==='word'||item.type==='ppt'){
+    s.files=await Promise.all(item.files.map(async f=>({
+      name:f.name,size:f.size,type:f.type,
+      b64:await blobToB64(f.url)
+    })));
+  }
+  return s;
+}
+
+async function saveSession(){
+  const btn=document.getElementById('btn-save');
+  btn.textContent='⏳ جاري الحفظ...';btn.disabled=true;
+  try{
+    // Serialize all data
+    const data={};
+    for(const key of Object.keys(subjects)){
+      data[key]=[];
+      for(const ch of subjects[key].chapters){
+        const sums=await Promise.all(ch.summaries.map(serializeItem));
+        const acts=await Promise.all(ch.activities.map(serializeItem));
+        data[key].push({summaries:sums,activities:acts});
+      }
+    }
+    // Inject data into a copy of this page
+    const src=document.documentElement.outerHTML;
+    const marker='/* __SAVED_DATA__ */';
+    const dataScript=`<script id="__saved__">window.__SAVED_DATA__=${JSON.stringify(data)};/* __SAVED_DATA__ */<\/script>`;
+    let newSrc;
+    // Remove old saved data block if exists
+    const oldRe=/<script id="__saved__">[\s\S]*?<\/script>/;
+    if(oldRe.test(src)){
+      newSrc=src.replace(oldRe,dataScript);
+    } else {
+      newSrc=src.replace('</body>',dataScript+'</body>');
+    }
+    const blob=new Blob([newSrc],{type:'text/html;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='TMU_Study_Platform_saved.html';
+    a.click();
+    btn.textContent='✅ تم الحفظ!';
+    setTimeout(()=>{btn.textContent='💾 حفظ';btn.disabled=false;},2500);
+  }catch(e){
+    btn.textContent='💾 حفظ';btn.disabled=false;
+    alert('حدث خطأ أثناء الحفظ: '+e.message);
+  }
+}
+
+// ─── LOAD & AUTO-SAVE ─────────────────────────────────────────
+function b64ToUrl(b64,mimeType){
+  const bin=atob(b64);
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
+  return URL.createObjectURL(new Blob([arr],{type:mimeType||'application/octet-stream'}));
+}
+
+function restoreItem(item){
+  const r={...item};
+  if(item.files){
+    r.files=item.files.map(f=>({
+      name:f.name,size:f.size,type:f.type,
+      url:f.b64?b64ToUrl(f.b64,f.type):f.url||''
+    }));
+  }
+  return r;
+}
+
+// Serialize for storage (blobs → base64)
+async function serializeForStorage(){
+  const data={};
+  for(const key of Object.keys(subjects)){
+    data[key]=[];
+    for(const ch of subjects[key].chapters){
+      const sums=await Promise.all(ch.summaries.map(serializeItem));
+      const acts=await Promise.all(ch.activities.map(serializeItem));
+      data[key].push({summaries:sums,activities:acts});
+    }
+  }
+  return data;
+}
+
+// Auto-save: localStorage + Firebase
+async function autoSave(){
+  try{
+    const data=await serializeForStorage();
+    // 1. localStorage (fast, offline backup)
+    try{ localStorage.setItem('tmu_data',JSON.stringify(data)); }catch(e){}
+    // 2. Firebase (sync across all devices)
+    if(window._fbReady){
+      const ok=await window._fbSave(data);
+      if(ok){ await window._fbTouch(); }
+    }
+    showSavedIndicator();
+  }catch(e){
+    console.warn('AutoSave failed:',e.message);
+  }
+}
+
+// Firebase status indicator
+function setFbStatus(ok){
+  const dot=document.getElementById('fb-dot');
+  const txt=document.getElementById('fb-txt');
+  if(!dot||!txt) return;
+  dot.style.background=ok?'#4ade80':'#f87171';
+  txt.textContent=ok?'متصل':'غير متصل';
+}
+window.addEventListener('fb-ready',()=>setFbStatus(true));
+setTimeout(()=>{ if(!window._fbReady) setFbStatus(false); },5000);
+
+let saveIndicatorTimer=null;
+function showSavedIndicator(){
+  const el=document.getElementById('save-indicator');
+  if(!el) return;
+  el.style.opacity='1';
+  clearTimeout(saveIndicatorTimer);
+  saveIndicatorTimer=setTimeout(()=>el.style.opacity='0',2000);
+}
+
+// Apply data to subjects
+function applyData(data){
+  if(!data) return;
+  for(const key of Object.keys(data)){
+    if(!subjects[key]) continue;
+    data[key].forEach((ch,i)=>{
+      if(!subjects[key].chapters[i]) return;
+      subjects[key].chapters[i].summaries=(ch.summaries||[]).map(restoreItem);
+      subjects[key].chapters[i].activities=(ch.activities||[]).map(restoreItem);
+    });
+  }
+}
+
+// Show loading overlay
+function showLoading(msg){
+  let el=document.getElementById('fb-loading');
+  if(!el){
+    el=document.createElement('div');
+    el.id='fb-loading';
+    el.style.cssText='position:fixed;inset:0;background:rgba(10,37,64,.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;font-family:Cairo,sans-serif';
+    el.innerHTML='<div style="font-size:32px">⏳</div><div style="font-size:16px;font-weight:700">جاري تحميل البيانات...</div><div style="font-size:13px;color:rgba(255,255,255,.6)">يتزامن مع Firebase</div>';
+    document.body.appendChild(el);
+  }
+  el.style.display='flex';
+}
+function hideLoading(){
+  const el=document.getElementById('fb-loading');
+  if(el) el.style.display='none';
+}
+
+// Real-time refresh from other devices
+window._fbOnChange = async function(){
+  const data=await window._fbLoad();
+  if(!data) return;
+  applyData(data);
+  if(currentKey) renderChapters(currentKey);
+};
+
+async function loadSavedData(){
+  // 1. Load localStorage immediately (instant, no flash)
+  let localData=null;
+  try{
+    const ls=localStorage.getItem('tmu_data');
+    if(ls) localData=JSON.parse(ls);
+  }catch(e){}
+  if(localData) applyData(localData);
+
+  // 2. Load from Firebase (authoritative)
+  if(window._fbReady){
+    showLoading();
+    const fbData=await window._fbLoad();
+    hideLoading();
+    if(fbData){
+      applyData(fbData);
+      // Update localStorage with fresh Firebase data
+      try{ localStorage.setItem('tmu_data',JSON.stringify(fbData)); }catch(e){}
+      if(currentKey) renderChapters(currentKey);
+    }
+  } else {
+    // Wait for Firebase to init then load
+    window.addEventListener('fb-ready', async ()=>{
+      showLoading();
+      const fbData=await window._fbLoad();
+      hideLoading();
+      if(fbData){
+        applyData(fbData);
+        try{ localStorage.setItem('tmu_data',JSON.stringify(fbData)); }catch(e){}
+        if(currentKey) renderChapters(currentKey);
+      }
+    }, {once:true});
+  }
+}
+// Auto-load on startup
+loadSavedData();
+</script>
+</body>
+</html>
